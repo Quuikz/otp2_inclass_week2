@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: otp2-week2-ci
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: maven-build
+          image: UI-Localization:latest
+          imagePullPolicy: IfNotPresent
+          command: ["mvn", "-B", "-ntp", "clean", "test", "package"]
+
