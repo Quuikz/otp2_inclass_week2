@@ -2,7 +2,7 @@ FROM maven:latest
 
 LABEL authors="riku"
 
-WORKDIR .
+WORKDIR /app
 
 COPY . .
 

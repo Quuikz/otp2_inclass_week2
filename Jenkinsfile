@@ -4,7 +4,6 @@ pipeline {
     tools {
         maven 'maven'
         git 'Default'
-        git 'Default'
     }
 
     environment {
