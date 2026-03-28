@@ -10,7 +10,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: maven-build
-          image: UI-Localization:latest
+          image: ui-localization:latest
           imagePullPolicy: IfNotPresent
           command: ["mvn", "-B", "-ntp", "clean", "test", "package"]
 

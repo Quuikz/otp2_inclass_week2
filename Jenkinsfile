@@ -12,7 +12,7 @@ pipeline {
        DOCKERHUB_REPO = 'rikukuikka/otp2_localization_week2'
        DOCKER_IMAGE_TAG = 'latest'
 
-       BUILD_IMAGE_NAME = 'UI-Localization'
+       BUILD_IMAGE_NAME = 'ui-localization'
     }
 
     stages {
