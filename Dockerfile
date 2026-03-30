@@ -8,8 +8,10 @@ WORKDIR /app
 
 COPY . .
 
-RUN apt-get update && \
-apt-get install -y \
+
+#try installing japanese fonts
+RUN apt-get update \
+&& apt-get install -y \
 fonts-liberation \
 fonts-dejavu-core \
 fonts-noto-core \
@@ -17,33 +19,28 @@ fonts-noto-cjk \
 fontconfig \
 libfreetype6 \
 locales \
-libgtk-3-0 \
-libglu1-mesa \
-libxtst6 \
-libxrender1 \
-libxi6 \
-libasound2t64 \
-libgbm1 \
-libx11-6 \
-maven \
-wget \
-unzip && \
 && locale-gen ja_JP.UTF-8 \
-apt-get clean && rm -rf /var/lib/apt/lists/*
+&& rm -rf /var/lib/apt/lists/*
 
 #rebuild font cache
-RUN fc-cache -fv
+RUN fc-cache -f
 
-RUN mvn -f pom.xml clean package -DskipTests# Download JavaFX SDK 21
+#Install dependencies for GUI + Maven build
+RUN apt-get update \
+    && apt-get install -y maven wget unzip libgtk-3-0 libgbm1 libx11-6 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN ARCH=$(uname -m) && \
-    if [ "$ARCH" = "x86_64" ]; then \
-        wget https://download2.gluonhq.com/openjfx/21/openjfx-21_linux-x64_bin-sdk.zip -O /tmp/openjfx.zip; \
-    else \
-        wget https://download2.gluonhq.com/openjfx/21/openjfx-21_linux-aarch64_bin-sdk.zip -O /tmp/openjfx.zip; \
-    fi && \
-    unzip /tmp/openjfx.zip -d /opt && \
-    rm /tmp/openjfx.zip
+# Download JavaFX SDK 21
+RUN wget https://download2.gluonhq.com/openjfx/21/openjfx-21_linux-x64_bin-sdk.zip -O /tmp/openjfx.zip \
+    && unzip /tmp/openjfx.zip -d /opt \
+    && rm /tmp/openjfx.zip
+
+RUN mvn -f pom.xml clean package -DskipTests
+
+RUN wget https://download2.gluonhq.com/openjfx/21/openjfx-21_linux-aarch64_bin-sdk.zip -O /tmp/openjfx.zip; \
+    fi \
+    && unzip /tmp/openjfx.zip -d /opt \
+    && rm /tmp/openjfx.zip
 
 CMD java \
     --module-path /opt/javafx-sdk-21/lib\
